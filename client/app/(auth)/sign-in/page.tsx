@@ -1,6 +1,5 @@
 "use client"
 
-import type { Metadata } from 'next'
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { z } from "zod"
@@ -19,11 +18,6 @@ const signInSchema = z.object({
 
 type SignInValues = z.infer<typeof signInSchema>
 
- 
-export const metadata: Metadata = {
-  title: '...',
-  description: '...',
-}
  
 
 export default function SignIn() {
