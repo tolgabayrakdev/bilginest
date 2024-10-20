@@ -69,6 +69,30 @@ export default function ResearchFeed() {
       comments: 31,
       shares: 27,
       views: 567
+    },
+    {
+      id: 4,
+      author: "Doç. Dr. Zeynep Demir",
+      avatar: "/placeholder.svg?height=40&width=40",
+      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
+      category: "Sosyal Bilimler",
+      tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
+      likes: 92,
+      comments: 31,
+      shares: 27,
+      views: 567
+    },
+    {
+      id: 5,
+      author: "Doç. Dr. Zeynep Demir",
+      avatar: "/placeholder.svg?height=40&width=40",
+      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
+      category: "Sosyal Bilimler",
+      tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
+      likes: 92,
+      comments: 31,
+      shares: 27,
+      views: 567
     }
   ])
 
@@ -115,25 +139,27 @@ export default function ResearchFeed() {
       <div className="flex-grow grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Sol Sidebar - Kategoriler */}
         <div className="md:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Kategoriler</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {categories.map(category => (
-                  <Button 
-                    key={category} 
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    className="w-full justify-start"
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="sticky top-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Kategoriler</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {categories.map(category => (
+                    <Button 
+                      key={category} 
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      className="w-full justify-start"
+                      onClick={() => setSelectedCategory(category)}
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Ana İçerik */}
