@@ -9,12 +9,17 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User } from 'lucide-react'
+import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User, Plus } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
+import Link from 'next/link'
 
 type Post = {
   id: number
   author: string
   avatar: string
+  title: string
   content: string
   category: string
   tags: string[]
@@ -38,6 +43,7 @@ export default function ResearchFeed() {
       id: 1,
       author: "Dr. Ayşe Yılmaz",
       avatar: "/placeholder.svg?height=40&width=40",
+      title: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik.",
       content: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik.",
       category: "Çevre Bilimleri",
       tags: ["iklim değişikliği", "tarım", "sürdürülebilirlik"],
@@ -50,6 +56,7 @@ export default function ResearchFeed() {
       id: 2,
       author: "Prof. Mehmet Kaya",
       avatar: "/placeholder.svg?height=40&width=40",
+      title: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor.",
       content: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor.",
       category: "Tıp",
       tags: ["yapay zeka", "kanser araştırmaları", "makine öğrenmesi"],
@@ -62,7 +69,8 @@ export default function ResearchFeed() {
       id: 3,
       author: "Doç. Dr. Zeynep Demir",
       avatar: "/placeholder.svg?height=40&width=40",
-      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
+      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık alışmanın sonuçları yayınlandı.",
+      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık alışmanın sonuçları yayınlandı.",
       category: "Sosyal Bilimler",
       tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
       likes: 92,
@@ -74,6 +82,7 @@ export default function ResearchFeed() {
       id: 4,
       author: "Doç. Dr. Zeynep Demir",
       avatar: "/placeholder.svg?height=40&width=40",
+      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
       content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
       category: "Sosyal Bilimler",
       tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
@@ -86,6 +95,7 @@ export default function ResearchFeed() {
       id: 5,
       author: "Doç. Dr. Zeynep Demir",
       avatar: "/placeholder.svg?height=40&width=40",
+      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
       content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
       category: "Sosyal Bilimler",
       tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
@@ -97,9 +107,15 @@ export default function ResearchFeed() {
   ])
 
   const [newPost, setNewPost] = useState({
+    title: '',
+    abstract: '',
     content: '',
     category: '',
-    tags: ''
+    tags: '',
+    methodology: '',
+    results: '',
+    conclusion: '',
+    references: ''
   })
 
   const [selectedCategory, setSelectedCategory] = useState("Tümü")
@@ -110,12 +126,15 @@ export default function ResearchFeed() {
     avatar: "/placeholder.svg?height=40&width=40"
   })
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const handlePostSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const newPostObject: Post = {
       id: posts.length + 1,
       author: user.name,
       avatar: user.avatar,
+      title: newPost.title,
       content: newPost.content,
       category: newPost.category,
       tags: newPost.tags.split(',').map(tag => tag.trim()),
@@ -125,7 +144,18 @@ export default function ResearchFeed() {
       views: 0
     }
     setPosts([newPostObject, ...posts])
-    setNewPost({ content: '', category: '', tags: '' })
+    setNewPost({
+      title: '',
+      abstract: '',
+      content: '',
+      category: '',
+      tags: '',
+      methodology: '',
+      results: '',
+      conclusion: '',
+      references: ''
+    })
+    setIsModalOpen(false)
   }
 
   const filteredPosts = selectedCategory === "Tümü" 
@@ -137,9 +167,9 @@ export default function ResearchFeed() {
   return (
     <div className="container mx-auto p-4 min-h-screen flex flex-col">
       <div className="flex-grow grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Sol Sidebar - Kategoriler */}
+        {/* Sol Sidebar - Kategoriler ve Yeni Araştırma Ekle Butonu */}
         <div className="md:col-span-1">
-          <div className="sticky top-4">
+          <div className="sticky top-4 space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>Kategoriler</CardTitle>
@@ -159,80 +189,177 @@ export default function ResearchFeed() {
                 </div>
               </CardContent>
             </Card>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Yeni Araştırma Ekle
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[900px] w-[90vw]">
+                <DialogHeader>
+                  <DialogTitle>Yeni Araştırma Paylaş</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handlePostSubmit} className="space-y-4">
+                  <Tabs defaultValue="general" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="general">Genel Bilgiler</TabsTrigger>
+                      <TabsTrigger value="details">Detaylar</TabsTrigger>
+                      <TabsTrigger value="results">Sonuçlar</TabsTrigger>
+                      <TabsTrigger value="references">Kaynaklar</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="general" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="title">Başlık</Label>
+                        <Input 
+                          id="title"
+                          value={newPost.title}
+                          onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                          placeholder="Araştırma başlığını girin"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="abstract">Özet</Label>
+                        <Textarea 
+                          id="abstract"
+                          value={newPost.abstract}
+                          onChange={(e) => setNewPost({...newPost, abstract: e.target.value})}
+                          placeholder="Araştırmanızın kısa bir özetini yazın"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="category">Kategori</Label>
+                        <Select onValueChange={(value) => setNewPost({...newPost, category: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Kategori seçin" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.slice(1).map(category => (
+                              <SelectItem key={category} value={category}>{category}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tags">Etiketler</Label>
+                        <Input 
+                          id="tags"
+                          value={newPost.tags}
+                          onChange={(e) => setNewPost({...newPost, tags: e.target.value})}
+                          placeholder="Etiketleri virgülle ayırarak girin"
+                        />
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="details" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="content">İçerik</Label>
+                        <Textarea 
+                          id="content"
+                          value={newPost.content}
+                          onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                          placeholder="Araştırmanızın ana içeriğini buraya yazın"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="methodology">Metodoloji</Label>
+                        <Textarea 
+                          id="methodology"
+                          value={newPost.methodology}
+                          onChange={(e) => setNewPost({...newPost, methodology: e.target.value})}
+                          placeholder="Araştırma metodolojinizi açıklayın"
+                        />
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="results" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="results">Sonuçlar</Label>
+                        <Textarea 
+                          id="results"
+                          value={newPost.results}
+                          onChange={(e) => setNewPost({...newPost, results: e.target.value})}
+                          placeholder="Araştırma sonuçlarınızı buraya yazın"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="conclusion">Sonuç</Label>
+                        <Textarea 
+                          id="conclusion"
+                          value={newPost.conclusion}
+                          onChange={(e) => setNewPost({...newPost, conclusion: e.target.value})}
+                          placeholder="Araştırmanızın sonucunu özetleyin"
+                        />
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="references" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="references">Kaynaklar</Label>
+                        <Textarea 
+                          id="references"
+                          value={newPost.references}
+                          onChange={(e) => setNewPost({...newPost, references: e.target.value})}
+                          placeholder="Kaynaklarınızı buraya ekleyin"
+                        />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                  <Button type="submit" className="w-full">Paylaş</Button>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
         {/* Ana İçerik */}
         <div className="md:col-span-2">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Yeni Araştırma Paylaş</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handlePostSubmit} className="space-y-4">
-                <Textarea 
-                  placeholder="Araştırmanızı buraya yazın..." 
-                  value={newPost.content}
-                  onChange={(e) => setNewPost({...newPost, content: e.target.value})}
-                />
-                <Select onValueChange={(value) => setNewPost({...newPost, category: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Kategori seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.slice(1).map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input 
-                  placeholder="Etiketler (virgülle ayırın)" 
-                  value={newPost.tags}
-                  onChange={(e) => setNewPost({...newPost, tags: e.target.value})}
-                />
-                <Button type="submit">Paylaş</Button>
-              </form>
-            </CardContent>
-          </Card>
-
           {filteredPosts.map(post => (
-            <Card key={post.id} className="mb-4">
+            <Card key={post.id} className="mb-6">
               <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <Avatar>
-                    <AvatarImage src={post.avatar} alt={post.author} />
-                    <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-lg">{post.author}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{post.category}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <Avatar>
+                      <AvatarImage src={post.avatar} alt={post.author} />
+                      <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle className="text-lg">{post.author}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{post.category}</p>
+                    </div>
                   </div>
+                  <Link href={`/research/${post.id}`} passHref>
+                    <Button variant="outline" size="sm">
+                      Detayları Gör
+                    </Button>
+                  </Link>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p>{post.content}</p>
-                <div className="mt-4 space-x-2">
+              <CardContent className="space-y-4">
+                <h3 className="text-xl font-semibold">{post.title}</h3>
+                <p className="text-muted-foreground">{post.content}</p>
+                <div className="space-x-2">
                   {post.tags.map(tag => (
                     <Badge key={tag} variant="secondary">{tag}</Badge>
                   ))}
                 </div>
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button variant="ghost" size="sm">
-                  <Heart className="w-4 h-4 mr-2" />
-                  {post.likes}
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  {post.comments}
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  {post.shares}
-                </Button>
+                <div className="flex space-x-4">
+                  <Button variant="ghost" size="sm">
+                    <Heart className="w-4 h-4 mr-2" />
+                    {post.likes}
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    {post.comments}
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Share2 className="w-4 h-4 mr-2" />
+                    {post.shares}
+                  </Button>
+                </div>
                 <Button variant="ghost" size="sm">
                   <BookOpen className="w-4 h-4 mr-2" />
-                  {post.views}
+                  {post.views} görüntülenme
                 </Button>
               </CardFooter>
             </Card>
