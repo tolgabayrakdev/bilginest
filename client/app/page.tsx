@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User, Plus } from 'lucide-react'
+import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User, Plus, X } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
@@ -20,6 +20,7 @@ type Post = {
   author: string
   avatar: string
   title: string
+  abstract: string // Özet alanını ekleyelim
   content: string
   category: string
   tags: string[]
@@ -43,8 +44,9 @@ export default function ResearchFeed() {
       id: 1,
       author: "Dr. Ayşe Yılmaz",
       avatar: "/placeholder.svg?height=40&width=40",
-      title: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik.",
-      content: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik.",
+      title: "Türkiye'deki İklim Değişikliğinin Tarım Üzerindeki Etkileri",
+      abstract: "Bu çalışma, Türkiye özelinde iklim değişikliğinin tarım üzerindeki etkilerini incelemektedir. Son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edilerek, ülkenin yedi coğrafi bölgesini kapsayan geniş bir alanda değerlendirmeler yapılmıştır.",
+      content: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik...",
       category: "Çevre Bilimleri",
       tags: ["iklim değişikliği", "tarım", "sürdürülebilirlik"],
       likes: 45,
@@ -56,8 +58,9 @@ export default function ResearchFeed() {
       id: 2,
       author: "Prof. Mehmet Kaya",
       avatar: "/placeholder.svg?height=40&width=40",
-      title: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor.",
-      content: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor.",
+      title: "Yapay Zeka ve Makine Öğrenmesi ile Kanser Teşhisinde Yeni Bir Yaklaşım",
+      abstract: "Bu araştırma, yapay zeka ve makine öğrenmesi teknikleri kullanılarak geliştirilen yeni bir algoritmanın kanser teşhisindeki etkinliğini incelemektedir. Çalışmamız, meme kanseri teşhisinde %95 doğruluk oranına ulaşan bir model ortaya koymuştur.",
+      content: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor. Bu çalışmada, özellikle meme kanseri üzerine odaklandık ve...",
       category: "Tıp",
       tags: ["yapay zeka", "kanser araştırmaları", "makine öğrenmesi"],
       likes: 78,
@@ -69,8 +72,9 @@ export default function ResearchFeed() {
       id: 3,
       author: "Doç. Dr. Zeynep Demir",
       avatar: "/placeholder.svg?height=40&width=40",
-      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık alışmanın sonuçları yayınlandı.",
-      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık alışmanın sonuçları yayınlandı.",
+      title: "Sosyal Medyanın Gençler Üzerindeki Psikolojik Etkileri: 5 Yıllık Boylamsal Çalışma",
+      abstract: "Bu araştırma, sosyal medya kullanımının 13-18 yaş arası gençler üzerindeki uzun vadeli psikolojik etkilerini incelemektedir. 5 yıl boyunca 1000 genci takip eden çalışmamız, sosyal medya kullanımı ile depresyon, anksiyete ve benlik saygısı arasındaki ilişkileri ortaya koymaktadır.",
+      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı. Araştırmamızda, günde 3 saatten fazla sosyal medya kullanan gençlerde depresyon riskinin %30 daha yüksek olduğunu tespit ettik...",
       category: "Sosyal Bilimler",
       tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
       likes: 92,
@@ -80,29 +84,31 @@ export default function ResearchFeed() {
     },
     {
       id: 4,
-      author: "Doç. Dr. Zeynep Demir",
+      author: "Dr. Ahmet Özkan",
       avatar: "/placeholder.svg?height=40&width=40",
-      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
-      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
-      category: "Sosyal Bilimler",
-      tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
-      likes: 92,
-      comments: 31,
-      shares: 27,
-      views: 567
+      title: "Yenilenebilir Enerji Kaynaklarının Türkiye Ekonomisine Katkısı",
+      abstract: "Bu çalışma, Türkiye'de yenilenebilir enerji kaynaklarının kullanımının ekonomik etkilerini analiz etmektedir. Güneş, rüzgar ve jeotermal enerji yatırımlarının istihdam, enerji ithalatı ve sürdürülebilir kalkınma üzerindeki etkileri incelenmiştir.",
+      content: "Yenilenebilir enerji kaynaklarının Türkiye ekonomisine katkısını incelediğimiz araştırmamızda, son 10 yılda bu alanda yapılan yatırımların 100.000'den fazla yeni iş imkanı yarattığını ve enerji ithalatını %15 oranında azalttığını tespit ettik...",
+      category: "Ekonomi",
+      tags: ["yenilenebilir enerji", "ekonomik kalkınma", "sürdürülebilirlik"],
+      likes: 67,
+      comments: 19,
+      shares: 23,
+      views: 389
     },
     {
       id: 5,
-      author: "Doç. Dr. Zeynep Demir",
+      author: "Prof. Dr. Elif Yılmaz",
       avatar: "/placeholder.svg?height=40&width=40",
-      title: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
-      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı.",
-      category: "Sosyal Bilimler",
-      tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
-      likes: 92,
-      comments: 31,
-      shares: 27,
-      views: 567
+      title: "Türkiye'de COVID-19 Aşılama Programının Etkinliği: Bir Yıllık Değerlendirme",
+      abstract: "Bu araştırma, Türkiye'de uygulanan COVID-19 aşılama programının ilk yılını değerlendirmektedir. Aşılama oranları, hastane yatışları ve ölüm oranlarındaki değişimler analiz edilerek, programın halk sağlığı üzerindeki etkileri incelenmiştir.",
+      content: "COVID-19 aşılama programının Türkiye'deki etkinliğini incelediğimiz bir yıllık değerlendirme sonuçlarımız yayınlandı. Araştırmamıza göre, aşılama programı sayesinde hastane yatışlarında %80, ölüm oranlarında ise %85'lik bir azalma gözlemledik...",
+      category: "Sağlık",
+      tags: ["COVID-19", "aşılama", "halk sağlığı"],
+      likes: 103,
+      comments: 42,
+      shares: 38,
+      views: 721
     }
   ])
 
@@ -119,6 +125,8 @@ export default function ResearchFeed() {
   })
 
   const [selectedCategory, setSelectedCategory] = useState("Tümü")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState('')
 
   const [user, setUser] = useState<User>({
     name: "Ahmet Yılmaz",
@@ -135,6 +143,7 @@ export default function ResearchFeed() {
       author: user.name,
       avatar: user.avatar,
       title: newPost.title,
+      abstract: newPost.abstract,
       content: newPost.content,
       category: newPost.category,
       tags: newPost.tags.split(',').map(tag => tag.trim()),
@@ -158,16 +167,46 @@ export default function ResearchFeed() {
     setIsModalOpen(false)
   }
 
-  const filteredPosts = selectedCategory === "Tümü" 
-    ? posts 
-    : posts.filter(post => post.category === selectedCategory)
+  const handleTagAdd = (tag: string) => {
+    if (tag && !selectedTags.includes(tag)) {
+      setSelectedTags([...selectedTags, tag])
+      setTagInput('')
+    }
+  }
+
+  const handleTagRemove = (tag: string) => {
+    setSelectedTags(selectedTags.filter(t => t !== tag))
+  }
+
+  const filteredPosts = posts.filter(post => 
+    (selectedCategory === "Tümü" || post.category === selectedCategory) &&
+    (selectedTags.length === 0 || selectedTags.every(tag => post.tags.includes(tag)))
+  )
 
   const trendingPosts = [...posts].sort((a, b) => b.views - a.views).slice(0, 5)
 
+  // Tüm postlardan en çok kullanılan 6 etiketi çıkaran yardımcı fonksiyon
+  const getTopTags = () => {
+    const tagCounts = posts.flatMap(post => post.tags).reduce((acc, tag) => {
+      acc[tag] = (acc[tag] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(tagCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([tag]) => tag);
+  }
+
   return (
     <div className="container mx-auto p-4 min-h-screen flex flex-col">
+      {/* Uygulama Adı */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-primary">Bilginest</h1>
+      </div>
+
       <div className="flex-grow grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Sol Sidebar - Kategoriler ve Yeni Araştırma Ekle Butonu */}
+        {/* Sol Sidebar - Kategoriler, Etiketler ve Yeni Araştırma Ekle Butonu */}
         <div className="md:col-span-1">
           <div className="sticky top-4 space-y-4">
             <Card>
@@ -186,6 +225,59 @@ export default function ResearchFeed() {
                       {category}
                     </Button>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Etiketler</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex space-x-2">
+                    <Input
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      placeholder="Etiket ara veya ekle"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleTagAdd(tagInput)
+                        }
+                      }}
+                    />
+                    <Button onClick={() => handleTagAdd(tagInput)}>Ekle</Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTags.map(tag => (
+                      <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
+                        <span>{tag}</span>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-auto p-0 text-muted-foreground" 
+                          onClick={() => handleTagRemove(tag)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold mb-1">Önerilen Etiketler:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {getTopTags().map(tag => (
+                        <Badge 
+                          key={tag} 
+                          variant="outline" 
+                          className="cursor-pointer"
+                          onClick={() => handleTagAdd(tag)}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -335,7 +427,7 @@ export default function ResearchFeed() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <h3 className="text-xl font-semibold">{post.title}</h3>
-                <p className="text-muted-foreground">{post.content}</p>
+                <p className="text-muted-foreground">{post.abstract}</p>
                 <div className="space-x-2">
                   {post.tags.map(tag => (
                     <Badge key={tag} variant="secondary">{tag}</Badge>
