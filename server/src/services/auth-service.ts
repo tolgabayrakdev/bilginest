@@ -2,12 +2,7 @@ import client from '../database';
 import { BadRequestError } from '../exceptions/bad-request-exception';
 import { Exception } from '../exceptions/exception';
 import { InternalServerError } from '../exceptions/internal-server-exception';
-import {
-    findByEmailQuery,
-    loginQuery,
-    registerQuery,
-    verifyUserQuery,
-} from '../queries/auth-queries';
+import { findByEmailQuery, loginQuery, registerQuery, verifyUserQuery } from '../queries/auth-queries';
 import { Helper } from '../util/helper';
 
 export class AuthService {
@@ -37,20 +32,16 @@ export class AuthService {
         };
     }
 
-    public async register(payload: { username: string; email: string; password: string }) {
+    public async register(payload: { username: string, email: string, password: string }) {
         const hashedPassword = this.helper.hashPassword(payload.password);
         try {
-            await client.query('BEGIN');
+            await client.query("BEGIN");
             const isEmailExist = await client.query(findByEmailQuery, [payload.email]);
             if (isEmailExist.rows.length > 0) {
-                throw new BadRequestError('Email already exist!');
+                throw new BadRequestError("Email already exist!");
             } else {
-                const newUser = await client.query(registerQuery, [
-                    payload.username,
-                    payload.email,
-                    hashedPassword,
-                ]);
-                await client.query('COMMIT');
+                const newUser = await client.query(registerQuery, [payload.username, payload.email, hashedPassword]);
+                await client.query("COMMIT");
                 return {
                     id: newUser.rows[0].id,
                     username: newUser.rows[0].username,
@@ -58,11 +49,11 @@ export class AuthService {
                 };
             }
         } catch (error) {
-            await client.query('ROLLBACK');
+            await client.query("ROLLBACK");
             if (error instanceof Exception) {
                 throw error;
             } else {
-                throw new InternalServerError('Something went wrong!');
+                throw new InternalServerError("Something went wrong!");
             }
         }
     }
@@ -80,8 +71,11 @@ export class AuthService {
             if (error instanceof Exception) {
                 throw error;
             } else {
-                throw new InternalServerError('Something went wrong!');
+                throw new InternalServerError('Something went wrong!'); 
             }
         }
+
+
     }
+
 }
