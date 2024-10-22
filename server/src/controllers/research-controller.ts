@@ -55,7 +55,7 @@ export class ResearchController {
         try {
             const id = req.params.id;
             await this.researchService.delete(parseInt(id));
-            res.status(204).send();
+            res.status(204).send({ message: 'Research has been deleted.' });
         } catch (error) {
             if (error instanceof Exception) {
                 res.status(error.statusCode).json({ message: error.message });
