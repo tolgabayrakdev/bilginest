@@ -64,8 +64,11 @@ export class AuthService {
             const result = await client.query(verifyUserQuery, [decodedToken.id]);
             if (result.rows.length === 0) {
                 throw new BadRequestError('User not found!');
+            }            
+            const user = {
+                username: result.rows[0].username,
+                email: result.rows[0].email,
             }
-            const user = result.rows[0];
             return user;
         } catch (error) {
             if (error instanceof Exception) {
