@@ -118,10 +118,8 @@ export default function ResearchFeed() {
     content: '',
     category: '',
     tags: '',
-    methodology: '',
     results: '',
-    conclusion: '',
-    references: ''
+    sources: ''
   })
 
   const [selectedCategory, setSelectedCategory] = useState("Tümü")
@@ -159,10 +157,8 @@ export default function ResearchFeed() {
       content: '',
       category: '',
       tags: '',
-      methodology: '',
       results: '',
-      conclusion: '',
-      references: ''
+      sources: ''
     })
     setIsModalOpen(false)
   }
@@ -295,11 +291,10 @@ export default function ResearchFeed() {
                 </DialogHeader>
                 <form onSubmit={handlePostSubmit} className="space-y-4">
                   <Tabs defaultValue="general" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-3">
                       <TabsTrigger value="general">Genel Bilgiler</TabsTrigger>
-                      <TabsTrigger value="details">Detaylar</TabsTrigger>
-                      <TabsTrigger value="results">Sonuçlar</TabsTrigger>
-                      <TabsTrigger value="references">Kaynaklar</TabsTrigger>
+                      <TabsTrigger value="content">İçerik</TabsTrigger>
+                      <TabsTrigger value="results">Sonuçlar ve Kaynaklar</TabsTrigger>
                     </TabsList>
                     <TabsContent value="general" className="space-y-4">
                       <div className="space-y-2">
@@ -343,7 +338,7 @@ export default function ResearchFeed() {
                         />
                       </div>
                     </TabsContent>
-                    <TabsContent value="details" className="space-y-4">
+                    <TabsContent value="content" className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="content">İçerik</Label>
                         <Textarea 
@@ -351,15 +346,6 @@ export default function ResearchFeed() {
                           value={newPost.content}
                           onChange={(e) => setNewPost({...newPost, content: e.target.value})}
                           placeholder="Araştırmanızın ana içeriğini buraya yazın"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="methodology">Metodoloji</Label>
-                        <Textarea 
-                          id="methodology"
-                          value={newPost.methodology}
-                          onChange={(e) => setNewPost({...newPost, methodology: e.target.value})}
-                          placeholder="Araştırma metodolojinizi açıklayın"
                         />
                       </div>
                     </TabsContent>
@@ -374,22 +360,11 @@ export default function ResearchFeed() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="conclusion">Sonuç</Label>
+                        <Label htmlFor="sources">Kaynaklar</Label>
                         <Textarea 
-                          id="conclusion"
-                          value={newPost.conclusion}
-                          onChange={(e) => setNewPost({...newPost, conclusion: e.target.value})}
-                          placeholder="Araştırmanızın sonucunu özetleyin"
-                        />
-                      </div>
-                    </TabsContent>
-                    <TabsContent value="references" className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="references">Kaynaklar</Label>
-                        <Textarea 
-                          id="references"
-                          value={newPost.references}
-                          onChange={(e) => setNewPost({...newPost, references: e.target.value})}
+                          id="sources"
+                          value={newPost.sources}
+                          onChange={(e) => setNewPost({...newPost, sources: e.target.value})}
                           placeholder="Kaynaklarınızı buraya ekleyin"
                         />
                       </div>

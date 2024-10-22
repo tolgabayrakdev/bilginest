@@ -13,6 +13,7 @@ const getResearchById = (id: string) => {
       author: "Dr. Ayşe Yılmaz",
       avatar: "/placeholder.svg?height=40&width=40",
       title: "Türkiye'deki İklim Değişikliğinin Tarım Üzerindeki Etkileri",
+      abstract: "İklim değişikliği, dünya genelinde tarım sektörünü etkileyen en önemli faktörlerden biridir. Bu çalışma, Türkiye özelinde iklim değişikliğinin tarım üzerindeki etkilerini incelemektedir. Son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edilerek, ülkenin yedi coğrafi bölgesini kapsayan geniş bir alanda değerlendirmeler yapılmıştır.",
       content: `Bu araştırmada, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik. Son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edildi. Çalışmamız, ülkenin yedi coğrafi bölgesini kapsayan geniş bir alanı içermektedir.
 
       Araştırmamızın temel bulguları şunlardır:
@@ -38,47 +39,26 @@ const getResearchById = (id: string) => {
       comments: 12,
       shares: 8,
       views: 230,
-      abstract: "İklim değişikliği, dünya genelinde tarım sektörünü etkileyen en önemli faktörlerden biridir. Bu çalışma, Türkiye özelinde iklim değişikliğinin tarım üzerindeki etkilerini incelemektedir. Son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edilerek, ülkenin yedi coğrafi bölgesini kapsayan geniş bir alanda değerlendirmeler yapılmıştır.",
-      methodology: "Bu çalışmada, son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edildi. Türkiye Meteoroloji Genel Müdürlüğü'nden alınan iklim verileri ve Türkiye İstatistik Kurumu'ndan elde edilen tarımsal üretim verileri kullanıldı. Ayrıca, 500'den fazla çiftçi ile yüz yüze görüşmeler yapıldı ve 7 bölgede toplam 50 tarım arazisinde saha çalışması gerçekleştirildi.",
       results: `Araştırmamızın sonuçları, iklim değişikliğinin Türkiye tarımı üzerinde ciddi etkileri olduğunu göstermektedir:
 
-      1. Sıcaklık Artışı: Türkiye'nin ortalama sıcaklığı son 50 yılda 1.5°C artmıştır. Bu artış, özellikle Akdeniz ve Güneydoğu Anadolu bölgelerinde daha belirgindir. Sıcaklık artışı, bitki gelişimini hızlandırmakta ve bazı bölgelerde erken olgunlaşmaya neden olmaktadır.
-
-      2. Yağış Düzensizliği: Yıllık toplam yağış miktarında önemli bir değişiklik gözlenmese de, yağış rejiminde belirgin değişiklikler tespit edilmiştir. Kış aylarında yağışlar %15 oranında azalırken, ilkbahar ve sonbaharda ani ve şiddetli yağışlar %25 oranında artmıştır. Bu durum, özellikle kuru tarım yapılan bölgelerde verimi olumsuz etkilemektedir.
-
-      3. Kuraklık: Artan sıcaklıklar ve değişen yağış düzeni, özellikle İç Anadolu ve Güneydoğu Anadolu bölgelerinde kuraklık riskini %40 oranında artırmıştır. Bu bölgelerde buğday ve arpa gibi tahıl ürünlerinin veriminde %20-30 oranında düşüş gözlemlenmiştir.
-
-      4. Tarımsal Üretim: İklim değişikliğinin etkisiyle, bazı bölgelerde geleneksel tarım ürünlerinin veriminde düşüşler gözlemlenmiştir. Örneğin, Çukurova bölgesinde pamuk üretimi %25 oranında azalmıştır. Buna karşılık, Karadeniz bölgesinde çay ve fındık üretiminde %10-15 oranında artış kaydedilmiştir.
-
-      5. Sulama İhtiyacı: Artan sıcaklıklar ve kuraklık nedeniyle, tarımsal sulama ihtiyacı son 20 yılda %40 oranında artmıştır. Bu durum, özellikle su kaynaklarının kısıtlı olduğu bölgelerde ciddi sorunlara yol açmaktadır.
-
-      6. Ekim-Dikim Zamanları: İklim değişikliği, geleneksel ekim-dikim zamanlarını etkilemiştir. Birçok çiftçi, ekim zamanlarını 2-3 hafta öne çekmiştir. Bu değişiklik, bazı bölgelerde don riskini artırırken, diğer bölgelerde ikinci ürün yetiştirme imkanı sağlamıştır.
-
-      7. Zararlı Popülasyonu: Sıcaklık artışıyla birlikte, bazı tarım zararlılarının popülasyonunda artış gözlemlenmiştir. Bu durum, pestisit kullanımını %30 oranında artırmıştır. Özellikle zeytin sineği ve pamuk beyazsineği gibi zararlıların yayılım alanı genişlemiştir.
-
-      8. Toprak Verimliliği: İklim değişikliği, toprak verimliliğini de etkilemektedir. Artan sıcaklıklar ve değişen yağış düzeni, topraktaki organik madde miktarını %10-15 oranında azaltmıştır. Bu durum, özellikle kurak ve yarı kurak bölgelerde toprak erozyonu riskini artırmaktadır.
-
-      9. Ürün Çeşitliliği: İklim değişikliği, bazı bölgelerde yeni tarım ürünlerinin yetiştirilmesine olanak sağlamıştır. Örneğin, Ege bölgesinde tropik meyve üretimi son 10 yılda %200 oranında artmıştır.
-
-      10. Ekonomik Etkiler: İklim değişikliğinin tarım üzerindeki etkileri, sektörün ekonomik yapısını da etkilemektedir. Araştırmamıza göre, iklim değişikliği nedeniyle Türkiye'nin tarımsal GSYİH'sında yıllık ortalama %2-3 oranında bir kayıp yaşanmaktadır.
-
-      Bu sonuçlar, Türkiye'nin tarım sektörünün iklim değişikliğine karşı oldukça savunmasız olduğunu ve acil adaptasyon stratejilerinin geliştirilmesi gerektiğini göstermektedir.`,
-      conclusion: "Sonuç olarak, iklim değişikliğinin Türkiye tarımı üzerinde ciddi etkileri olduğu ve acil adaptasyon stratejilerinin geliştirilmesi gerektiği ortaya çıkmıştır. Çalışmamız, sürdürülebilir tarım uygulamalarının, iklime dayanıklı tohum çeşitlerinin geliştirilmesinin ve su kaynaklarının etkin yönetiminin önemini vurgulamaktadır. Ayrıca, çiftçilerin iklim değişikliği konusunda bilinçlendirilmesi ve desteklenmesi gerekmektedir. Gelecekte yapılacak araştırmaların, bölgesel ölçekte daha detaylı analizlere odaklanması ve uzun vadeli iklim projeksiyonlarını içermesi önerilmektedir.",
-      references: `1. IPCC. (2021). Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth Assessment Report of the Intergovernmental Panel on Climate Change. Cambridge University Press.
-
+      1. Sıcaklık Artışı: Türkiye'nin ortalama sıcaklığı son 50 yılda 1.5°C artmıştır. 
+      2. Yağış Düzensizliği: Kış aylarında yağışlar %15 oranında azalırken, ilkbahar ve sonbaharda ani ve şiddetli yağışlar %25 oranında artmıştır.
+      3. Kuraklık: İç Anadolu ve Güneydoğu Anadolu bölgelerinde kuraklık riski %40 oranında artmıştır.
+      4. Tarımsal Üretim: Çukurova bölgesinde pamuk üretimi %25 oranında azalmıştır.
+      5. Sulama İhtiyacı: Tarımsal sulama ihtiyacı son 20 yılda %40 oranında artmıştır.
+      6. Ekim-Dikim Zamanları: Birçok çiftçi, ekim zamanlarını 2-3 hafta öne çekmiştir.
+      7. Zararlı Popülasyonu: Pestisit kullanımı %30 oranında artmıştır.
+      8. Toprak Verimliliği: Topraktaki organik madde miktarı %10-15 oranında azalmıştır.
+      9. Ürün Çeşitliliği: Ege bölgesinde tropik meyve üretimi son 10 yılda %200 oranında artmıştır.
+      10. Ekonomik Etkiler: Türkiye'nin tarımsal GSYİH'sında yıllık ortalama %2-3 oranında bir kayıp yaşanmaktadır.`,
+      sources: `1. IPCC. (2021). Climate Change 2021: The Physical Science Basis.
       2. Türkiye İstatistik Kurumu. (2020). Tarımsal Üretim İstatistikleri.
-
       3. Türkiye Meteoroloji Genel Müdürlüğü. (2021). Türkiye İklim Değişikliği Raporu.
-
-      4. FAO. (2021). The State of Food and Agriculture 2021. Rome.
-
-      5. Öztürk, K. (2002). Küresel İklim Değişikliği ve Türkiye'ye Olası Etkileri. Gazi Üniversitesi Gazi Eğitim Fakültesi Dergisi, 22(1), 47-65.
-
-      6. Şen, Ö. L., Bozkurt, D., Vogler, J. B., Fox, J., Giambelluca, T. W., & Ziegler, A. D. (2013). Hydro-climatic effects of future land-cover/land-use change in montane mainland southeast Asia. Climatic Change, 118(2), 213-226.
-
-      7. Türkeş, M. (2020). İklim Değişikliğinin Tarımsal Üretime Etkileri: Türkiye Örneği. Ankara Üniversitesi Çevrebilimleri Dergisi, 8(1), 1-25.
-
-      8. Dellal, İ., McCarl, B. A., & Butt, T. (2011). The economic assessment of climate change on Turkish agriculture. Journal of Environmental Protection and Ecology, 12(1), 376-385.`
+      4. FAO. (2021). The State of Food and Agriculture 2021.
+      5. Öztürk, K. (2002). Küresel İklim Değişikliği ve Türkiye'ye Olası Etkileri.
+      6. Şen, Ö. L., et al. (2013). Hydro-climatic effects of future land-cover/land-use change in montane mainland southeast Asia.
+      7. Türkeş, M. (2020). İklim Değişikliğinin Tarımsal Üretime Etkileri: Türkiye Örneği.
+      8. Dellal, İ., McCarl, B. A., & Butt, T. (2011). The economic assessment of climate change on Turkish agriculture.`
     },
     // Diğer araştırmalar...
   ]
@@ -130,20 +110,12 @@ export default function ResearchPage({ params }: { params: { slug: string } }) {
             <p>{research.content}</p>
           </section>
           <section>
-            <h3 className="text-xl font-semibold mb-2">Metodoloji</h3>
-            <p>{research.methodology}</p>
-          </section>
-          <section>
             <h3 className="text-xl font-semibold mb-2">Sonuçlar</h3>
             <p>{research.results}</p>
           </section>
           <section>
-            <h3 className="text-xl font-semibold mb-2">Sonuç</h3>
-            <p>{research.conclusion}</p>
-          </section>
-          <section>
             <h3 className="text-xl font-semibold mb-2">Kaynaklar</h3>
-            <p className="whitespace-pre-line">{research.references}</p>
+            <p className="whitespace-pre-line">{research.sources}</p>
           </section>
         </CardContent>
         <CardFooter className="flex justify-between">
