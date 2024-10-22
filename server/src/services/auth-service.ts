@@ -17,7 +17,7 @@ export class AuthService {
         const result = await client.query(loginQuery, [email, hashedPassword]);
         if (result.rows.length === 0) {
             throw new BadRequestError('User not found!');
-        }
+        }   
         const user = result.rows[0];
         const payload = {
             id: user.id,
