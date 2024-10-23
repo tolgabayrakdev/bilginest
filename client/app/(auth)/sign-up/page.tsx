@@ -5,6 +5,7 @@ import Link from "next/link"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,6 +25,7 @@ type SignUpValues = z.infer<typeof signUpSchema>
 
 export default function SignUp() {
   const router = useRouter()
+  const [status, setStatus] = useState<string>('')
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -34,11 +36,35 @@ export default function SignUp() {
     },
   })
 
-  const onSubmit = (values: SignUpValues) => {
-    console.log("Hesap oluşturuluyor:", values)
-    // Burada hesap oluşturma işlemlerini gerçekleştirin
-    // Başarılı kayıttan sonra yönlendirme yapabilirsiniz
-    // router.push("/dashboard")
+  const onSubmit = async (values: SignUpValues) => {
+    setStatus('Hesap oluşturuluyor...')
+    try {
+      const response = await fetch('http://localhost:1234/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        }),
+      })
+
+      if (response.ok) {
+        setStatus('Hesap başarıyla oluşturuldu! Yönlendiriliyorsunuz...')
+        router.push("/sign-in")
+      } else if (response.status === 400) {
+        const errorData = await response.json()
+        setStatus(`Hesap oluşturulamadı: ${errorData.message || 'Bu e-posta veya kullanıcı adı zaten kullanılıyor.'}`)
+      } else {
+        const errorData = await response.json()
+        setStatus(`Hesap oluşturulamadı: ${errorData.message || 'Bir hata oluştu'}`)
+      }
+    } catch (error) {
+      setStatus('Bir hata oluştu. Lütfen tekrar deneyin.')
+      console.error('Kayıt hatası:', error)
+    }
   }
 
   return (
@@ -84,7 +110,7 @@ export default function SignUp() {
                   <FormItem>
                     <FormLabel>Şifre</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input placeholder="********" type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -97,7 +123,7 @@ export default function SignUp() {
                   <FormItem>
                     <FormLabel>Şifre Tekrar</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input placeholder="********" type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,6 +132,7 @@ export default function SignUp() {
               <Button className="w-full" type="submit">
                 Hesap Oluştur
               </Button>
+              {status && <p className="mt-2 text-sm text-center text-red-500">{status}</p>}
             </form>
           </Form>
         </CardContent>

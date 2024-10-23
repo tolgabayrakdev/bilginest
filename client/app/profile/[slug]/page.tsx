@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,9 +12,40 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AlertCircle, Calendar, MapPin, Pencil, Trash, ArrowLeft } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
+// Research tipini tanımlayalım
+type Research = {
+  id: number
+  title: string
+  date: string
+}
+
 export default function UserProfile() {
   const router = useRouter()
+  const params = useSearchParams()
   const [isDeleting, setIsDeleting] = useState(false)
+  const [researches, setResearches] = useState<Research[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchResearches = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch(`http://localhost:1234/api/research/${params.get('slug')}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch researches')
+        }
+        const data = await response.json()
+        setResearches(data)
+      } catch (error) {
+        console.error('Error fetching researches:', error)
+        // Hata durumunda kullanıcıya bir bildirim gösterebilirsiniz
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchResearches()
+  }, [params.get('slug')])
 
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
@@ -131,30 +162,32 @@ export default function UserProfile() {
                           <CardDescription>Manage your research blog posts here.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                          <div className="space-y-6">
-                            {[
-                              { id: 1, title: "Introduction to Machine Learning", date: "2023-05-15" },
-                              { id: 2, title: "Advanced Neural Networks", date: "2023-06-22" },
-                              { id: 3, title: "The Future of AI", date: "2023-07-10" },
-                            ].map((post) => (
-                              <div key={post.id} className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
-                                <div>
-                                  <h3 className="font-semibold">{post.title}</h3>
-                                  <p className="text-sm text-muted-foreground">{post.date}</p>
+                          {isLoading ? (
+                            <p>Loading researches...</p>
+                          ) : researches.length > 0 ? (
+                            <div className="space-y-6">
+                              {researches.map((research) => (
+                                <div key={research.id} className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+                                  <div>
+                                    <h3 className="font-semibold">{research.title}</h3>
+                                    <p className="text-sm text-muted-foreground">{research.date}</p>
+                                  </div>
+                                  <div className="flex space-x-2">
+                                    <Button size="sm" variant="outline">
+                                      <Pencil className="w-4 h-4 mr-2" />
+                                      Edit
+                                    </Button>
+                                    <Button size="sm" variant="outline" className="text-destructive">
+                                      <Trash className="w-4 h-4 mr-2" />
+                                      Delete
+                                    </Button>
+                                  </div>
                                 </div>
-                                <div className="flex space-x-2">
-                                  <Button size="sm" variant="outline">
-                                    <Pencil className="w-4 h-4 mr-2" />
-                                    Edit
-                                  </Button>
-                                  <Button size="sm" variant="outline" className="text-destructive">
-                                    <Trash className="w-4 h-4 mr-2" />
-                                    Delete
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p>No researches found.</p>
+                          )}
                         </CardContent>
                         <CardFooter>
                           <Button onClick={() => router.push("/new-post")} className="mt-4">Create New Post</Button>

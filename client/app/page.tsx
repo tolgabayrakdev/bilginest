@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -9,20 +9,27 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User, Plus, X } from 'lucide-react'
+import { Share2, MessageCircle, Heart, TrendingUp, BookOpen, LogOut, User, Plus, X, Loader2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import Link from 'next/link'
+import { useRouter } from 'next/navigation' // useRouter'ı import ediyoruz
 
 type Post = {
   id: number
-  author: string
-  avatar: string
   title: string
-  abstract: string // Özet alanını ekleyelim
   content: string
+  abstract: string
+  results: string
+  sources: string
+  user: {
+    username: string
+    email: string
+  }
+  // Diğer alanları da ekleyelim (API'den gelmese bile şimdilik tutalım)
   category: string
+  created_at: string
   tags: string[]
   likes: number
   comments: number
@@ -39,78 +46,8 @@ type User = {
 const categories = ["Tümü", "Çevre Bilimleri", "Tıp", "Teknoloji", "Sosyal Bilimler"]
 
 export default function ResearchFeed() {
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      id: 1,
-      author: "Dr. Ayşe Yılmaz",
-      avatar: "/placeholder.svg?height=40&width=40",
-      title: "Türkiye'deki İklim Değişikliğinin Tarım Üzerindeki Etkileri",
-      abstract: "Bu çalışma, Türkiye özelinde iklim değişikliğinin tarım üzerindeki etkilerini incelemektedir. Son 50 yıllık iklim verileri ve tarımsal üretim istatistikleri analiz edilerek, ülkenin yedi coğrafi bölgesini kapsayan geniş bir alanda değerlendirmeler yapılmıştır.",
-      content: "Yeni araştırmamızda, Türkiye'deki iklim değişikliğinin tarım üzerindeki etkilerini inceledik...",
-      category: "Çevre Bilimleri",
-      tags: ["iklim değişikliği", "tarım", "sürdürülebilirlik"],
-      likes: 45,
-      comments: 12,
-      shares: 8,
-      views: 230
-    },
-    {
-      id: 2,
-      author: "Prof. Mehmet Kaya",
-      avatar: "/placeholder.svg?height=40&width=40",
-      title: "Yapay Zeka ve Makine Öğrenmesi ile Kanser Teşhisinde Yeni Bir Yaklaşım",
-      abstract: "Bu araştırma, yapay zeka ve makine öğrenmesi teknikleri kullanılarak geliştirilen yeni bir algoritmanın kanser teşhisindeki etkinliğini incelemektedir. Çalışmamız, meme kanseri teşhisinde %95 doğruluk oranına ulaşan bir model ortaya koymuştur.",
-      content: "Yapay zeka ve makine öğrenmesi teknikleriyle geliştirdiğimiz yeni algoritma, kanser teşhisinde %95 doğruluk sağlıyor. Bu çalışmada, özellikle meme kanseri üzerine odaklandık ve...",
-      category: "Tıp",
-      tags: ["yapay zeka", "kanser araştırmaları", "makine öğrenmesi"],
-      likes: 78,
-      comments: 23,
-      shares: 15,
-      views: 412
-    },
-    {
-      id: 3,
-      author: "Doç. Dr. Zeynep Demir",
-      avatar: "/placeholder.svg?height=40&width=40",
-      title: "Sosyal Medyanın Gençler Üzerindeki Psikolojik Etkileri: 5 Yıllık Boylamsal Çalışma",
-      abstract: "Bu araştırma, sosyal medya kullanımının 13-18 yaş arası gençler üzerindeki uzun vadeli psikolojik etkilerini incelemektedir. 5 yıl boyunca 1000 genci takip eden çalışmamız, sosyal medya kullanımı ile depresyon, anksiyete ve benlik saygısı arasındaki ilişkileri ortaya koymaktadır.",
-      content: "Sosyal medyanın gençler üzerindeki psikolojik etkileri üzerine yaptığımız 5 yıllık çalışmanın sonuçları yayınlandı. Araştırmamızda, günde 3 saatten fazla sosyal medya kullanan gençlerde depresyon riskinin %30 daha yüksek olduğunu tespit ettik...",
-      category: "Sosyal Bilimler",
-      tags: ["sosyal medya", "psikoloji", "gençlik araştırmaları"],
-      likes: 92,
-      comments: 31,
-      shares: 27,
-      views: 567
-    },
-    {
-      id: 4,
-      author: "Dr. Ahmet Özkan",
-      avatar: "/placeholder.svg?height=40&width=40",
-      title: "Yenilenebilir Enerji Kaynaklarının Türkiye Ekonomisine Katkısı",
-      abstract: "Bu çalışma, Türkiye'de yenilenebilir enerji kaynaklarının kullanımının ekonomik etkilerini analiz etmektedir. Güneş, rüzgar ve jeotermal enerji yatırımlarının istihdam, enerji ithalatı ve sürdürülebilir kalkınma üzerindeki etkileri incelenmiştir.",
-      content: "Yenilenebilir enerji kaynaklarının Türkiye ekonomisine katkısını incelediğimiz araştırmamızda, son 10 yılda bu alanda yapılan yatırımların 100.000'den fazla yeni iş imkanı yarattığını ve enerji ithalatını %15 oranında azalttığını tespit ettik...",
-      category: "Ekonomi",
-      tags: ["yenilenebilir enerji", "ekonomik kalkınma", "sürdürülebilirlik"],
-      likes: 67,
-      comments: 19,
-      shares: 23,
-      views: 389
-    },
-    {
-      id: 5,
-      author: "Prof. Dr. Elif Yılmaz",
-      avatar: "/placeholder.svg?height=40&width=40",
-      title: "Türkiye'de COVID-19 Aşılama Programının Etkinliği: Bir Yıllık Değerlendirme",
-      abstract: "Bu araştırma, Türkiye'de uygulanan COVID-19 aşılama programının ilk yılını değerlendirmektedir. Aşılama oranları, hastane yatışları ve ölüm oranlarındaki değişimler analiz edilerek, programın halk sağlığı üzerindeki etkileri incelenmiştir.",
-      content: "COVID-19 aşılama programının Türkiye'deki etkinliğini incelediğimiz bir yıllık değerlendirme sonuçlarımız yayınlandı. Araştırmamıza göre, aşılama programı sayesinde hastane yatışlarında %80, ölüm oranlarında ise %85'lik bir azalma gözlemledik...",
-      category: "Sağlık",
-      tags: ["COVID-19", "aşılama", "halk sağlığı"],
-      likes: 103,
-      comments: 42,
-      shares: 38,
-      views: 721
-    }
-  ])
+  const router = useRouter() // useRouter hook'unu kullanıyoruz
+  const [posts, setPosts] = useState<Post[]>([])
 
   const [newPost, setNewPost] = useState({
     title: '',
@@ -133,6 +70,42 @@ export default function ResearchFeed() {
   })
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true) // Yeni loading state'i
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true) // Veri çekmeye başlarken loading'i true yapıyoruz
+      try {
+        const response = await fetch('http://localhost:1234/api/research/all',{
+          method: 'GET',
+          credentials: 'include',
+        })
+        if (!response.ok) {
+          throw new Error('Veri çekme işlemi başarısız oldu')
+        }
+        const data = await response.json()
+        // API'den gelen verileri mevcut Post tipine uygun hale getirelim
+        const formattedPosts = data.map((post: Post) => ({
+          ...post,
+          author: post.user.username,
+          avatar: "/placeholder.svg?height=40&width=40", // Varsayılan avatar
+          category: "Genel", // Varsayılan kategori
+          tags: [], // Boş etiket dizisi
+          likes: 0,
+          comments: 0,
+          shares: 0,
+          views: 0
+        }))
+        setPosts(formattedPosts)
+      } catch (error) {
+        console.error('Veri çekme hatası:', error)
+      } finally {
+        setIsLoading(false) // Veri çekme işlemi bittiğinde loading'i false yapıyoruz
+      }
+    }
+
+    fetchPosts()
+  }, [])
 
   const handlePostSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -148,7 +121,13 @@ export default function ResearchFeed() {
       likes: 0,
       comments: 0,
       shares: 0,
-      views: 0
+      views: 0,
+      results: '',
+      sources: '',
+      user: {
+        username: user.name,
+        email: user.email
+      }
     }
     setPosts([newPostObject, ...posts])
     setNewPost({
@@ -192,6 +171,26 @@ export default function ResearchFeed() {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
       .map(([tag]) => tag);
+  }
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:1234/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include', // Çerezleri de göndermek için
+      })
+
+      if (response.ok) {
+        // Çıkış başarılı, kullanıcıyı sign-in sayfasına yönlendir
+        router.push('/sign-in')
+      } else {
+        console.error('Çıkış yapılırken bir hata oluştu')
+        // Hata durumunda kullanıcıya bir bildirim gösterebilirsiniz
+      }
+    } catch (error) {
+      console.error('Çıkış yapılırken bir hata oluştu:', error)
+      // Hata durumunda kullanıcıya bir bildirim gösterebilirsiniz
+    }
   }
 
   return (
@@ -379,58 +378,67 @@ export default function ResearchFeed() {
 
         {/* Ana İçerik */}
         <div className="md:col-span-2">
-          {filteredPosts.map(post => (
-            <Card key={post.id} className="mb-6">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src={post.avatar} alt={post.author} />
-                      <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <CardTitle className="text-lg">{post.author}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{post.category}</p>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-2 text-lg">Araştırmalar yükleniyor...</span>
+            </div>
+          ) : (
+            filteredPosts.map(post => (
+              <Card key={post.id} className="mb-6">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <Avatar>
+                        <AvatarImage src={post.avatar} alt={post.author} />
+                        <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <CardTitle className="text-lg">{post.author}</CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          {post.category} | Oluşturulma tarihi: {new Date(post.created_at).toLocaleDateString('tr-TR')}
+                        </p>
+                      </div>
                     </div>
+                    <Link href={`/research/${post.id}`} passHref>
+                      <Button variant="outline" size="sm">
+                        Detayları Gör
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href={`/research/${post.id}`} passHref>
-                    <Button variant="outline" size="sm">
-                      Detayları Gör
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <h3 className="text-xl font-semibold">{post.title}</h3>
+                  <p className="text-muted-foreground">{post.abstract}</p>
+                  <div className="space-x-2">
+                    {post.tags.map(tag => (
+                      <Badge key={tag} variant="secondary">{tag}</Badge>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <div className="flex space-x-4">
+                    <Button variant="ghost" size="sm">
+                      <Heart className="w-4 h-4 mr-2" />
+                      {post.likes}
                     </Button>
-                  </Link>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <h3 className="text-xl font-semibold">{post.title}</h3>
-                <p className="text-muted-foreground">{post.abstract}</p>
-                <div className="space-x-2">
-                  {post.tags.map(tag => (
-                    <Badge key={tag} variant="secondary">{tag}</Badge>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <div className="flex space-x-4">
+                    <Button variant="ghost" size="sm">
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      {post.comments}
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Share2 className="w-4 h-4 mr-2" />
+                      {post.shares}
+                    </Button>
+                  </div>
                   <Button variant="ghost" size="sm">
-                    <Heart className="w-4 h-4 mr-2" />
-                    {post.likes}
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    {post.views} görüntülenme
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    {post.comments}
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Share2 className="w-4 h-4 mr-2" />
-                    {post.shares}
-                  </Button>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  {post.views} görüntülenme
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                </CardFooter>
+              </Card>
+            ))
+          )}
         </div>
 
         {/* Sağ Sidebar - Trend Araştırmalar */}
@@ -478,7 +486,7 @@ export default function ResearchFeed() {
               <User className="mr-2 h-4 w-4" />
               <span>Profil</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}> {/* onClick ekliyoruz */}
               <LogOut className="mr-2 h-4 w-4" />
               <span>Çıkış Yap</span>
             </DropdownMenuItem>

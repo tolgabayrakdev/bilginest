@@ -5,6 +5,7 @@ import Link from "next/link"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,10 +19,9 @@ const signInSchema = z.object({
 
 type SignInValues = z.infer<typeof signInSchema>
 
- 
-
 export default function SignIn() {
   const router = useRouter()
+  const [status, setStatus] = useState<string>('')
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -30,11 +30,31 @@ export default function SignIn() {
     },
   })
 
-  const onSubmit = (values: SignInValues) => {
-    console.log("Giriş yapılıyor:", values)
-    // Burada giriş işlemlerini gerçekleştirin
-    // Başarılı girişten sonra yönlendirme yapabilirsiniz
-    // router.push("/dashboard")
+  const onSubmit = async (values: SignInValues) => {
+    setStatus('Giriş yapılıyor...')
+    try {
+      const response = await fetch('http://localhost:1234/api/auth/login', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (response.ok) {
+        setStatus('Giriş başarılı! Yönlendiriliyorsunuz...')
+        router.push("/")
+      } else if (response.status === 400) {
+        setStatus('E-posta veya parola hatalı. Lütfen bilgilerinizi kontrol edin.')
+      } else {
+        const errorData = await response.json()
+        setStatus(`Giriş başarısız: ${errorData.message || 'Bir hata oluştu'}`)
+      }
+    } catch (error) {
+      setStatus('Bir hata oluştu. Lütfen tekrar deneyin.')
+      console.error('Giriş hatası:', error)
+    }
   }
 
   return (
@@ -67,7 +87,7 @@ export default function SignIn() {
                   <FormItem>
                     <FormLabel>Şifre</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input placeholder="********" type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -76,6 +96,7 @@ export default function SignIn() {
               <Button className="w-full" type="submit">
                 Giriş Yap
               </Button>
+              {status && <p className="mt-2 text-sm text-center text-red-500">{status}</p>}
             </form>
           </Form>
         </CardContent>
