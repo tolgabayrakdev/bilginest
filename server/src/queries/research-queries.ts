@@ -1,6 +1,6 @@
 const createResearchQuery = `INSERT INTO public.research
 (title, abstract, "content", results, sources, user_id, created_at, updated_at)
-VALUES($1, $2, $3, $4, $5, $6, now(), now())`;
+VALUES($1, $2, $3, $4, $5, $6, now(), now()) RETURNING id;`;
 
 const getResearchByIdQuery = `SELECT * FROM public.research WHERE id = $1;`;
 const getAllResearchQuery = `SELECT * FROM public.research WHERE user_id = $1;`;
