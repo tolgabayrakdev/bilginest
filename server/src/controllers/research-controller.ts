@@ -53,9 +53,9 @@ export class ResearchController {
             }
 
             const newResearch = await this.researchService.create(
-                { title, abstract, content, results, sources, created_at: new Date(), updated_at: new Date() }, 
-                req.user.id, 
-                categories || [], 
+                { title, abstract, content, results, sources, created_at: new Date(), updated_at: new Date() },
+                req.user.id,
+                categories || [],
                 tags || []
             );
             res.status(201).json(newResearch);
@@ -71,6 +71,19 @@ export class ResearchController {
     public listResearch = async (req: Request, res: Response) => {
         try {
             const researchList = await this.researchService.list(req.user.id);
+            res.status(200).json(researchList);
+        } catch (error) {
+            if (error instanceof Exception) {
+                res.status(error.statusCode).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal server error!' });
+            }
+        }
+    }
+
+    public listAllResearch = async (req: Request, res: Response) => {
+        try {
+            const researchList = await this.researchService.listAll();
             res.status(200).json(researchList);
         } catch (error) {
             if (error instanceof Exception) {
@@ -116,18 +129,18 @@ export class ResearchController {
 
             // Validasyon
             if (!title || !abstract || !content || !results || !sources) {
-                 res.status(400).json({ message: "All research fields are required." });
+                res.status(400).json({ message: "All research fields are required." });
             }
 
             const updatedResearch = await this.researchService.update(parseInt(id), {
-                title: title ?? '', 
-                abstract: abstract ?? '', 
-                content: content ?? '', 
-                results: results ?? '', 
-                sources: sources ?? '', 
-                created_at: new Date(), 
+                title: title ?? '',
+                abstract: abstract ?? '',
+                content: content ?? '',
+                results: results ?? '',
+                sources: sources ?? '',
+                created_at: new Date(),
                 updated_at: new Date()
-              });
+            });
 
             // Kategoriler ve etiketler güncellenmek istenirse burada handle edilebilir
 

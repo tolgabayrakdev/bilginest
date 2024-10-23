@@ -1,7 +1,7 @@
 import client from "../database";
 import { Exception } from "../exceptions/exception";
 import { InternalServerError } from "../exceptions/internal-server-exception";
-import { createResearchQuery, deleteResearchQuery, getAllResearchQuery, getResearchByIdQuery, updateResearchQuery } from "../queries/research-queries";
+import { createResearchQuery, deleteResearchQuery, getAllResearch, getAllResearchQuery, getResearchByIdQuery, updateResearchQuery } from "../queries/research-queries";
 
 type Research = {
     title: string,
@@ -45,7 +45,7 @@ export class ResearchService {
             return newResearch.rows[0];
         } catch (error) {
             console.log(error);
-            
+
             await client.query("ROLLBACK");
             if (error instanceof Exception) {
                 throw error;
@@ -60,6 +60,21 @@ export class ResearchService {
             const result = await client.query(getAllResearchQuery, [user_id]);
             return result.rows;
         } catch (error) {
+            if (error instanceof Exception) {
+                throw error;
+            } else {
+                throw new InternalServerError("Something went wrong!");
+            }
+        }
+    }
+
+    public async listAll() {
+        try {
+            const result = await client.query(getAllResearch);
+            return result.rows;
+        } catch (error) {
+            console.log(error);
+            
             if (error instanceof Exception) {
                 throw error;
             } else {
