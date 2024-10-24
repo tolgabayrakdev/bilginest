@@ -27,7 +27,6 @@ type Post = {
     username: string
     email: string
   }
-  // Diğer alanları da ekleyelim (API'den gelmese bile şimdilik tutalım)
   category: string
   created_at: string
   tags: string[]
@@ -76,7 +75,7 @@ export default function ResearchFeed() {
     const fetchPosts = async () => {
       setIsLoading(true) // Veri çekmeye başlarken loading'i true yapıyoruz
       try {
-        const response = await fetch('http://localhost:1234/api/research/all',{
+        const response = await fetch('http://localhost:1234/api/research/all', {
           method: 'GET',
           credentials: 'include',
         })
@@ -111,8 +110,6 @@ export default function ResearchFeed() {
     e.preventDefault()
     const newPostObject: Post = {
       id: posts.length + 1,
-      author: user.name,
-      avatar: user.avatar,
       title: newPost.title,
       abstract: newPost.abstract,
       content: newPost.content,
@@ -127,7 +124,8 @@ export default function ResearchFeed() {
       user: {
         username: user.name,
         email: user.email
-      }
+      },
+      created_at: new Date().toISOString()
     }
     setPosts([newPostObject, ...posts])
     setNewPost({
@@ -153,7 +151,7 @@ export default function ResearchFeed() {
     setSelectedTags(selectedTags.filter(t => t !== tag))
   }
 
-  const filteredPosts = posts.filter(post => 
+  const filteredPosts = posts.filter(post =>
     (selectedCategory === "Tümü" || post.category === selectedCategory) &&
     (selectedTags.length === 0 || selectedTags.every(tag => post.tags.includes(tag)))
   )
@@ -211,8 +209,8 @@ export default function ResearchFeed() {
               <CardContent>
                 <div className="space-y-2">
                   {categories.map(category => (
-                    <Button 
-                      key={category} 
+                    <Button
+                      key={category}
                       variant={selectedCategory === category ? "default" : "outline"}
                       className="w-full justify-start"
                       onClick={() => setSelectedCategory(category)}
@@ -247,10 +245,10 @@ export default function ResearchFeed() {
                     {selectedTags.map(tag => (
                       <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
                         <span>{tag}</span>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-auto p-0 text-muted-foreground" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-auto p-0 text-muted-foreground"
                           onClick={() => handleTagRemove(tag)}
                         >
                           <X className="h-3 w-3" />
@@ -262,9 +260,9 @@ export default function ResearchFeed() {
                     <p className="text-sm font-semibold mb-1">Önerilen Etiketler:</p>
                     <div className="flex flex-wrap gap-2">
                       {getTopTags().map(tag => (
-                        <Badge 
-                          key={tag} 
-                          variant="outline" 
+                        <Badge
+                          key={tag}
+                          variant="outline"
                           className="cursor-pointer"
                           onClick={() => handleTagAdd(tag)}
                         >
@@ -298,25 +296,25 @@ export default function ResearchFeed() {
                     <TabsContent value="general" className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="title">Başlık</Label>
-                        <Input 
+                        <Input
                           id="title"
                           value={newPost.title}
-                          onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                           placeholder="Araştırma başlığını girin"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="abstract">Özet</Label>
-                        <Textarea 
+                        <Textarea
                           id="abstract"
                           value={newPost.abstract}
-                          onChange={(e) => setNewPost({...newPost, abstract: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, abstract: e.target.value })}
                           placeholder="Araştırmanızın kısa bir özetini yazın"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="category">Kategori</Label>
-                        <Select onValueChange={(value) => setNewPost({...newPost, category: value})}>
+                        <Select onValueChange={(value) => setNewPost({ ...newPost, category: value })}>
                           <SelectTrigger>
                             <SelectValue placeholder="Kategori seçin" />
                           </SelectTrigger>
@@ -329,10 +327,10 @@ export default function ResearchFeed() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="tags">Etiketler</Label>
-                        <Input 
+                        <Input
                           id="tags"
                           value={newPost.tags}
-                          onChange={(e) => setNewPost({...newPost, tags: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                           placeholder="Etiketleri virgülle ayırarak girin"
                         />
                       </div>
@@ -340,10 +338,10 @@ export default function ResearchFeed() {
                     <TabsContent value="content" className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="content">İçerik</Label>
-                        <Textarea 
+                        <Textarea
                           id="content"
                           value={newPost.content}
-                          onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                           placeholder="Araştırmanızın ana içeriğini buraya yazın"
                         />
                       </div>
@@ -351,19 +349,19 @@ export default function ResearchFeed() {
                     <TabsContent value="results" className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="results">Sonuçlar</Label>
-                        <Textarea 
+                        <Textarea
                           id="results"
                           value={newPost.results}
-                          onChange={(e) => setNewPost({...newPost, results: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, results: e.target.value })}
                           placeholder="Araştırma sonuçlarınızı buraya yazın"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="sources">Kaynaklar</Label>
-                        <Textarea 
+                        <Textarea
                           id="sources"
                           value={newPost.sources}
-                          onChange={(e) => setNewPost({...newPost, sources: e.target.value})}
+                          onChange={(e) => setNewPost({ ...newPost, sources: e.target.value })}
                           placeholder="Kaynaklarınızı buraya ekleyin"
                         />
                       </div>

@@ -8,7 +8,6 @@ interface AuthProviderProps {
 
 function AuthProvider({ children }: AuthProviderProps) {
     const router = useRouter()
-    const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [accessDenied, setAccessDenied] = useState(false);
 
@@ -21,7 +20,6 @@ function AuthProvider({ children }: AuthProviderProps) {
                 });
                 if (res.status === 200) {
                     setLoading(false);
-                    setLoggedIn(true);
                 } else if (res.status === 401 || res.status === 403) {
                     setLoading(false);
                     setAccessDenied(true);
