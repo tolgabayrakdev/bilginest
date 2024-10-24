@@ -1,11 +1,11 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, scoped_session
 from sqlalchemy.exc import IntegrityError
-from werkzeug.exceptions import HTTPException, abort
+from werkzeug.exceptions import abort
 from ..model import User
 
 
 class UserRepository:
-    def __init__(self, session: Session):
+    def __init__(self, session: scoped_session):
         self.session = session
 
     def create(self, username: str, email: str, password: str):
@@ -16,28 +16,19 @@ class UserRepository:
                 email=email,
                 password=password,
             )
-            print("user: ", user.to_dict())
             self.session.add(user)
             self.session.commit()
             self.session.refresh(user)
             return user
         except IntegrityError:
             self.session.rollback()
-            raise abort(400, description="User already exists!")
-        finally:
-            self.session.close()
+            abort(400, description="User already exists!")
 
     def get_by_id(self, id: int):
-        try:
             return self.session.query(User).filter(User.id == id).first()
-        except Exception:
-            raise abort(404, description="User not found")
 
     def get_by_email(self, email: str):
-        try:
             return self.session.query(User).filter(User.email == email).first()
-        except Exception:
-            raise abort(404, description="User not found")
 
     def update(self, user_data: dict, id: int):
         try:
@@ -50,8 +41,8 @@ class UserRepository:
 
             self.session.commit()
             self.session.refresh(user)
-        except Exception:
+        except IntegrityError:
             self.session.rollback()
-            raise abort(500, description="Internal server error")
+            abort(500, description="Internal server error")
         finally:
             self.session.close()

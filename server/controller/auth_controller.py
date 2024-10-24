@@ -1,7 +1,9 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import IntegrityError
+
 from ..service.auth_service import AuthService
 from ..repository.user_repository import UserRepository
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import abort, HTTPException
 from ..model import db
 
 auth_controller = Blueprint("auth_controller", __name__)
@@ -24,8 +26,8 @@ def login():
         response.set_cookie("access_token", result["access_token"], httponly=True)
         response.set_cookie("refresh_token", result["refresh_token"], httponly=True)
         return response, 200
-    except HTTPException as he:
-        return jsonify({"message": he.description}), he.code
+    except IntegrityError:
+        abort(500, description="Internal server error")
 
 @auth_controller.route("/register", methods=["POST"])
 def register():
@@ -40,8 +42,8 @@ def register():
     try:
         result = auth_service.register(username, email, password)
         return jsonify({"message": "User created", "result": result.to_dict()}), 201
-    except HTTPException as he:
-        return jsonify({"message": he.description}), he.code
+    except IntegrityError:
+        abort(500, description="Internal server error")
 
 @auth_controller.route("/logout", methods=["POST"])
 def logout():
