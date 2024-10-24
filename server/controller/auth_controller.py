@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from ..service.auth_service import AuthService
 from ..repository.user_repository import UserRepository
-from werkzeug.exceptions import abort, HTTPException
+from werkzeug.exceptions import abort
 from ..model import db
 
 auth_controller = Blueprint("auth_controller", __name__)
